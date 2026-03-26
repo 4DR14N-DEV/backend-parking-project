@@ -1,11 +1,10 @@
 import pg from "pg";
-import { config } from "dotenv";
 import { promisify } from "util";
 import dns from "dns";
 import Database from "./database.js";
 
-// Cargar .env solo si existe (en local), en Vercel ya está configurado
-config();
+// Las variables de entorno vienen de Vercel (process.env.DATABASE_URL)
+// No necesitamos cargar .env manualmente
 
 const resolve4 = promisify(dns.resolve4);
 
