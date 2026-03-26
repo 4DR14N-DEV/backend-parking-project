@@ -22,8 +22,6 @@ class PostgreSQLDatabase extends Database {
       throw new Error("DATABASE_URL no está configurada en las variables de entorno");
     }
     
-    console.log("🔧 DEBUG - DATABASE_URL:", connectionString.substring(0, 50) + "...");
-    
     // Extraer configuración de la URL
     const urlObj = new URL(connectionString);
     const host = urlObj.hostname;
@@ -32,17 +30,15 @@ class PostgreSQLDatabase extends Database {
     const user = urlObj.username;
     const password = urlObj.password;
 
-    console.log(`🔄 Conectando a ${host}:${port}/${database}...`);
-
     this.pool = new Pool({
       host: host,
       port: port,
       database: database,
       user: user,
       password: password,
-      max: 5,
-      idleTimeoutMillis: 10000,
-      connectionTimeoutMillis: 5000,
+      max: 20,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 10000,
     });
 
     // Manejar errores de conexión
@@ -56,9 +52,6 @@ class PostgreSQLDatabase extends Database {
       const client = await this.pool.connect();
       const result = await client.query('SELECT current_database() as db, NOW() as hora');
       this.isConnected = true;
-      if (process.env.NODE_ENV !== "production") {
-        console.log(`✓ Conexión a PostgreSQL establecida — base de datos: "${result.rows[0].db}"`);
-      }
       client.release();
     } catch (error) {
       this.isConnected = false;
@@ -90,9 +83,6 @@ class PostgreSQLDatabase extends Database {
    * Método helper para ejecutar queries con parámetros estilo MySQL
    */
   async query(sqlString, params = []) {
-    console.log("🔧 DEBUG - SQL:", sqlString);
-    console.log("🔧 DEBUG - PARAMS:", params);
-    
     // Reconectar si es necesario
     if (!this.pool || !this.isConnected) {
       await this.connect();
@@ -100,19 +90,11 @@ class PostgreSQLDatabase extends Database {
 
     try {
       // Ejecutar SET search_path antes de cada query
-      const setResult = await this.pool.query("SET search_path TO ParkingLot, public");
-      console.log("🔧 DEBUG - SET search_path result:", setResult);
-      
-      // Verificar el search_path actual
-      const checkResult = await this.pool.query("SHOW search_path");
-      console.log("🔧 DEBUG - Current search_path:", checkResult.rows[0].search_path);
+      await this.pool.query("SET search_path TO ParkingLot, public");
       
       const result = await this.pool.query(sqlString, params);
-      console.log("🔧 DEBUG - ROWS:", result.rows.length);
       return result.rows;
     } catch (error) {
-      console.log("🔧 DEBUG - ERROR:", error.message);
-      console.log("🔧 DEBUG - ERROR CODE:", error.code);
       // Si hay error de conexión, intentar reconectar
       if (error.code === '57P01' || error.code === '57P02' || error.code === '57P03') {
         this.isConnected = false;
