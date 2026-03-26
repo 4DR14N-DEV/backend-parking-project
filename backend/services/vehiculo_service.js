@@ -12,16 +12,14 @@ class VehiculoService {
       usuario,
     });
 
-    //Conectar si aun hay conexion activa
     try {
       db.getConnection();
     } catch {
       await db.connect();
     }
 
-    //INSERT usando los getters del objeto para respetar la encapsulacion
     const result = await db.query(
-      "INSERT INTO vehiculo (placa, color, modelo, marca, tipo, usuario_id_usuario) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
+      'INSERT INTO "VEHICULO" (placa, color, modelo, marca, tipo, usuario_id_usuario) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
       [
         vehiculo.placa,
         vehiculo.color,
@@ -44,7 +42,7 @@ class VehiculoService {
     }
 
     const rows = await db.query(
-      "SELECT id, placa, color, modelo, marca, tipo, usuario_id_usuario FROM vehiculo",
+      'SELECT id, placa, color, modelo, marca, tipo, usuario_id_usuario FROM "VEHICULO"',
     );
 
     const vehiculos = rows.map((row) => {
@@ -70,7 +68,7 @@ class VehiculoService {
     }
 
     const rows = await db.query(
-      "SELECT id, placa, color, modelo, marca, tipo, usuario_id_usuario FROM vehiculo WHERE id = $1",
+      'SELECT id, placa, color, modelo, marca, tipo, usuario_id_usuario FROM "VEHICULO" WHERE id = $1',
       [id],
     );
 
@@ -92,11 +90,9 @@ class VehiculoService {
   }
 
   async actualizarVehiculo(id, datosActualizados) {
-    //Obtener el objeto desde la base de datos
     const vehiculo = await this.obtenerVehiculoPorId(id);
     if (!vehiculo) return null;
 
-    //Aplicar cambios sobre el objeto usando los setters nativos
     if (datosActualizados.placa !== undefined)
       vehiculo.placa = datosActualizados.placa;
     if (datosActualizados.color !== undefined)
@@ -110,9 +106,8 @@ class VehiculoService {
     if (datosActualizados.usuario !== undefined)
       vehiculo.usuario = datosActualizados.usuario;
 
-    //Persistir en la base de datos usando los getters del objeto actualizado
     await db.query(
-      "UPDATE vehiculo SET placa = $1, color = $2, modelo = $3, marca = $4, tipo = $5, usuario_id_usuario = $6 WHERE id = $7",
+      'UPDATE "VEHICULO" SET placa = $1, color = $2, modelo = $3, marca = $4, tipo = $5, usuario_id_usuario = $6 WHERE id = $7',
       [
         vehiculo.placa,
         vehiculo.color,
@@ -128,11 +123,10 @@ class VehiculoService {
   }
 
   async eliminarVehiculo(id) {
-    //Obtener el objeto desde la base de datos
     const vehiculo = await this.obtenerVehiculoPorId(id);
     if (!vehiculo) return null;
 
-    await db.query("DELETE FROM vehiculo WHERE id = $1", [vehiculo.id]);
+    await db.query('DELETE FROM "VEHICULO" WHERE id = $1', [vehiculo.id]);
     return vehiculo;
   }
 }

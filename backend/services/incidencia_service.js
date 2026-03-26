@@ -14,7 +14,7 @@ class IncidenciaService {
     }
 
     const result = await db.query(
-      "INSERT INTO incidencia (nombre) VALUES ($1) RETURNING id",
+      'INSERT INTO "INCIDENCIA" (nombre) VALUES ($1) RETURNING id',
       [incidencia.nombre],
     );
 
@@ -29,7 +29,7 @@ class IncidenciaService {
       await db.connect();
     }
 
-    const rows = await db.query("SELECT id, nombre FROM incidencia");
+    const rows = await db.query('SELECT id, nombre FROM "INCIDENCIA"');
 
     const incidencias = rows.map((row) => {
       const incidencia = new Incidencia({
@@ -49,7 +49,7 @@ class IncidenciaService {
     }
 
     const rows = await db.query(
-      "SELECT id, nombre FROM incidencia WHERE id = $1",
+      'SELECT id, nombre FROM "INCIDENCIA" WHERE id = $1',
       [id],
     );
 
@@ -70,7 +70,7 @@ class IncidenciaService {
     if (datosActualizados.nombre !== undefined)
       incidencia.nombre = datosActualizados.nombre;
 
-    await db.query("UPDATE incidencia SET nombre = $1 WHERE id = $2", [
+    await db.query('UPDATE "INCIDENCIA" SET nombre = $1 WHERE id = $2', [
       incidencia.nombre,
       incidencia.id,
     ]);
@@ -81,7 +81,7 @@ class IncidenciaService {
     const incidencia = await this.obtenerIncidenciaPorId(id);
     if (!incidencia) return null;
 
-    await db.query("DELETE FROM incidencia WHERE id = $1", [incidencia.id]);
+    await db.query('DELETE FROM "INCIDENCIA" WHERE id = $1', [incidencia.id]);
     return incidencia;
   }
 }

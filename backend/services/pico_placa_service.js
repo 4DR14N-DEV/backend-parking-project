@@ -9,16 +9,14 @@ class PicoPlacaService {
       dia,
     });
 
-    //Conectar si aun hay conexión activa
     try {
       db.getConnection();
     } catch {
       await db.connect();
     }
 
-    //INSERT usando los getters del objeto para respetar la encapsulacion
     const result = await db.query(
-      "INSERT INTO pico_placa (tipo_vehiculo, numero, dia) VALUES ($1, $2, $3) RETURNING id",
+      'INSERT INTO "PICO_PLACA" (tipo_vehiculo, numero, dia) VALUES ($1, $2, $3) RETURNING id',
       [picoPlaca.tipoVehiculo, picoPlaca.numero, picoPlaca.dia],
     );
 
@@ -34,7 +32,7 @@ class PicoPlacaService {
     }
 
     const rows = await db.query(
-      "SELECT id, tipo_vehiculo, numero, dia FROM pico_placa",
+      'SELECT id, tipo_vehiculo, numero, dia FROM "PICO_PLACA"',
     );
 
     const picoPlacas = rows.map((row) => {
@@ -57,7 +55,7 @@ class PicoPlacaService {
     }
 
     const rows = await db.query(
-      "SELECT id, tipo_vehiculo, numero, dia FROM pico_placa WHERE id = $1",
+      'SELECT id, tipo_vehiculo, numero, dia FROM "PICO_PLACA" WHERE id = $1',
       [id],
     );
 
@@ -85,7 +83,7 @@ class PicoPlacaService {
       picoPlaca.dia = datosActualizados.dia;
 
     await db.query(
-      "UPDATE pico_placa SET tipo_vehiculo = $1, numero = $2, dia = $3 WHERE id = $4",
+      'UPDATE "PICO_PLACA" SET tipo_vehiculo = $1, numero = $2, dia = $3 WHERE id = $4',
       [picoPlaca.tipoVehiculo, picoPlaca.numero, picoPlaca.dia, picoPlaca.id],
     );
 
@@ -96,7 +94,7 @@ class PicoPlacaService {
     const picoPlaca = await this.obtenerPicoPlacaPorId(id);
     if (!picoPlaca) return null;
 
-    await db.query("DELETE FROM pico_placa WHERE id = $1", [picoPlaca.id]);
+    await db.query('DELETE FROM "PICO_PLACA" WHERE id = $1', [picoPlaca.id]);
     return picoPlaca;
   }
 }

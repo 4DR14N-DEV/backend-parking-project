@@ -16,7 +16,7 @@ class HistorialParqueoService {
     }
 
     await db.query(
-      "INSERT INTO historial_parqueo (vehiculo_id, celda_id, fecha_hora) VALUES ($1, $2, $3)",
+      'INSERT INTO "HISTORIAL_PARQUEO" (vehiculo_id, celda_id, fecha_hora) VALUES ($1, $2, $3)',
       [
         historialParqueo.vehiculo,
         historialParqueo.celda,
@@ -35,7 +35,7 @@ class HistorialParqueoService {
     }
 
     const rows = await db.query(
-      "SELECT vehiculo_id, celda_id, fecha_hora FROM historial_parqueo",
+      'SELECT vehiculo_id, celda_id, fecha_hora FROM "HISTORIAL_PARQUEO"',
     );
 
     const historialParqueos = rows.map((row) => {
@@ -57,7 +57,7 @@ class HistorialParqueoService {
     }
 
     const rows = await db.query(
-      "SELECT vehiculo_id, celda_id, fecha_hora FROM historial_parqueo WHERE vehiculo_id = $1 AND celda_id = $2",
+      'SELECT vehiculo_id, celda_id, fecha_hora FROM "HISTORIAL_PARQUEO" WHERE vehiculo_id = $1 AND celda_id = $2',
       [vehiculoId, celdaId],
     );
 
@@ -78,7 +78,7 @@ class HistorialParqueoService {
     if (!historialParqueo) return null;
 
     await db.query(
-      "DELETE FROM historial_parqueo WHERE vehiculo_id = $1 AND celda_id = $2",
+      'DELETE FROM "HISTORIAL_PARQUEO" WHERE vehiculo_id = $1 AND celda_id = $2',
       [historialParqueo.vehiculo, historialParqueo.celda],
     );
     return historialParqueo;

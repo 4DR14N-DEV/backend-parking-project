@@ -14,7 +14,7 @@ class CeldaService {
     }
 
     const result = await db.query(
-      "INSERT INTO celda (tipo, estado) VALUES ($1, $2) RETURNING id",
+      'INSERT INTO "CELDA" (tipo, estado) VALUES ($1, $2) RETURNING id',
       [celda.tipo, celda.estado],
     );
 
@@ -29,7 +29,7 @@ class CeldaService {
       await db.connect();
     }
 
-    const rows = await db.query("SELECT id, tipo, estado FROM celda");
+    const rows = await db.query('SELECT id, tipo, estado FROM "CELDA"');
 
     const celdas = rows.map((row) => {
       const celda = new Celda({
@@ -50,7 +50,7 @@ class CeldaService {
     }
 
     const rows = await db.query(
-      "SELECT id, tipo, estado FROM celda WHERE id = $1",
+      'SELECT id, tipo, estado FROM "CELDA" WHERE id = $1',
       [id],
     );
 
@@ -74,7 +74,7 @@ class CeldaService {
     if (datosActualizados.estado !== undefined)
       celda.estado = datosActualizados.estado;
 
-    await db.query("UPDATE celda SET tipo = $1, estado = $2 WHERE id = $3", [
+    await db.query('UPDATE "CELDA" SET tipo = $1, estado = $2 WHERE id = $3', [
       celda.tipo,
       celda.estado,
       celda.id,
@@ -87,7 +87,7 @@ class CeldaService {
     const celda = await this.obtenerCeldaPorId(id);
     if (!celda) return null;
 
-    await db.query("DELETE FROM celda WHERE id = $1", [celda.id]);
+    await db.query('DELETE FROM "CELDA" WHERE id = $1', [celda.id]);
     return celda;
   }
 }

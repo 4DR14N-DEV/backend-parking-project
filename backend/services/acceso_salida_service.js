@@ -24,7 +24,7 @@ class AccesoSalidaService {
     }
 
     const result = await db.query(
-      "INSERT INTO acceso_salidas (movimiento, fecha_hora, puerta, tiempo_estadia, vehiculo_id) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+      'INSERT INTO "ACCESO_SALIDAS" (movimiento, fecha_hora, puerta, tiempo_estadia, vehiculo_id) VALUES ($1, $2, $3, $4, $5) RETURNING id',
       [
         accesoSalida.movimiento,
         accesoSalida.fechaHora,
@@ -46,7 +46,7 @@ class AccesoSalidaService {
     }
 
     const rows = await db.query(
-      "SELECT id, movimiento, fecha_hora, puerta, tiempo_estadia, vehiculo_id FROM acceso_salidas",
+      'SELECT id, movimiento, fecha_hora, puerta, tiempo_estadia, vehiculo_id FROM "ACCESO_SALIDAS"',
     );
 
     const accesosSalidas = rows.map((row) => {
@@ -63,7 +63,6 @@ class AccesoSalidaService {
     return accesosSalidas;
   }
 
-  // Renombrado para ser más claro e implementando la Opción A (solo ID)
   async obtenerAccesoSalidaPorId(id) {
     try {
       db.getConnection();
@@ -71,13 +70,11 @@ class AccesoSalidaService {
       await db.connect();
     }
 
-    // Consulta filtrando únicamente por id
     const rows = await db.query(
-      "SELECT id, movimiento, fecha_hora, puerta, tiempo_estadia, vehiculo_id FROM acceso_salidas WHERE id = $1",
+      'SELECT id, movimiento, fecha_hora, puerta, tiempo_estadia, vehiculo_id FROM "ACCESO_SALIDAS" WHERE id = $1',
       [id],
     );
 
-    // Bug lógico corregido
     if (rows.length === 0) return null;
 
     const row = rows[0];
@@ -92,7 +89,6 @@ class AccesoSalidaService {
   }
 
   async actualizarAccesoSalida(id, datosActualizados) {
-    // Busca únicamente por ID
     const accesoSalida = await this.obtenerAccesoSalidaPorId(id);
     if (!accesoSalida) return null;
 
@@ -105,9 +101,8 @@ class AccesoSalidaService {
     if (datosActualizados.tiempoEstadia !== undefined)
       accesoSalida.tiempoEstadia = datosActualizados.tiempoEstadia;
 
-    // Actualiza únicamente usando el WHERE id = $1
     await db.query(
-      "UPDATE acceso_salidas SET movimiento = $1, fecha_hora = $2, puerta = $3, tiempo_estadia = $4 WHERE id = $5",
+      'UPDATE "ACCESO_SALIDAS" SET movimiento = $1, fecha_hora = $2, puerta = $3, tiempo_estadia = $4 WHERE id = $5',
       [
         accesoSalida.movimiento,
         accesoSalida.fechaHora,
@@ -121,12 +116,10 @@ class AccesoSalidaService {
   }
 
   async eliminarAccesoSalida(id) {
-    // Busca únicamente por ID
     const accesoSalida = await this.obtenerAccesoSalidaPorId(id);
     if (!accesoSalida) return null;
 
-    // Elimina únicamente usando el WHERE id = $1
-    await db.query("DELETE FROM acceso_salidas WHERE id = $1", [
+    await db.query('DELETE FROM "ACCESO_SALIDAS" WHERE id = $1', [
       accesoSalida.id,
     ]);
 
