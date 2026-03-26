@@ -1,14 +1,11 @@
 import pg from "pg";
-import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
+import { config } from "dotenv";
 import { promisify } from "util";
 import dns from "dns";
 import Database from "./database.js";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-// Cargar .env desde la raíz del proyecto
-dotenv.config({ path: path.resolve(__dirname, "../.env"), override: true });
+// Cargar .env solo si existe (en local), en Vercel ya está configurado
+config();
 
 const resolve4 = promisify(dns.resolve4);
 
