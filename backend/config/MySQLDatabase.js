@@ -1,8 +1,5 @@
 import mysql from "mysql2/promise";
-import dotenv from "dotenv";
 import Database from "./database.js";
-
-dotenv.config({ override: true });
 
 class MySQLDatabase extends Database {
   constructor() {
