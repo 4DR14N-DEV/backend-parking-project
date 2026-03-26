@@ -3,16 +3,16 @@ import cors from "cors";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
-import db from "./config/PostgreSQLDatabase.js";
-import routerUsuario from "./routes/usuario_routes.js";
-import routerVehiculo from "./routes/vehiculo_routes.js";
-import routerAccesoSalida from "./routes/acceso_salida_routes.js";
-import routerCelda from "./routes/celda_routes.js";
-import routerHistorialParqueo from "./routes/historial_parqueo_routes.js";
-import routerIncidencia from "./routes/incidencia_routes.js";
-import routerPerfilUsuario from "./routes/perfil_usuario_routes.js";
-import routerPicoPlaca from "./routes/pico_placa_routes.js";
-import routerReporteIncidencia from "./routes/reporte_incidencia_routes.js";
+import db from "../config/PostgreSQLDatabase.js";
+import routerUsuario from "../routes/usuario_routes.js";
+import routerVehiculo from "../routes/vehiculo_routes.js";
+import routerAccesoSalida from "../routes/acceso_salida_routes.js";
+import routerCelda from "../routes/celda_routes.js";
+import routerHistorialParqueo from "../routes/historial_parqueo_routes.js";
+import routerIncidencia from "../routes/incidencia_routes.js";
+import routerPerfilUsuario from "../routes/perfil_usuario_routes.js";
+import routerPicoPlaca from "../routes/pico_placa_routes.js";
+import routerReporteIncidencia from "../routes/reporte_incidencia_routes.js";
 
 const app = express();
 const PORT = process.env.PORT || process.env.VERCEL_PORT || 3000;
@@ -32,7 +32,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: [path.resolve(process.cwd(), "routes/*.js"), path.resolve(process.cwd(), "backend/routes/*.js")], 
+  apis: [path.resolve(process.cwd(), "../routes/*.js")], 
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
