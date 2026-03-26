@@ -158,27 +158,27 @@ app.get("/", (req, res) => {
   });
 });
 
-// Conectar a la base de datos e iniciar servidor
-async function startServer() {
-  try {
-    await db.connect();
-    console.log("✓ Base de datos conectada");
-  } catch (error) {
-    console.error("⚠ Error al conectar base de datos:", error.message);
-  }
-
-  // Vercel maneja el servidor automáticamente con export default
-  if (!process.env.VERCEL) {
+// Iniciar servidor
+if (!process.env.VERCEL) {
+  (async () => {
+    try {
+      await db.connect();
+      console.log("✓ Base de datos conectada");
+    } catch (error) {
+      console.error("⚠ Error al conectar base de datos:", error.message);
+    }
+    
     app.listen(PORT, () => {
       console.log(`✓ Servidor corriendo en http://localhost:${PORT}`);
       console.log(`✓ API disponible en http://localhost:${PORT}/api`);
     });
-  }
+  })();
+} else {
+  // En Vercel, intentar conectar pero no bloquear
+  db.connect().catch(err => {
+    console.error("⚠ Error al conectar base de datos en Vercel:", err.message);
+  });
 }
 
-startServer();
-
 // Exportar para Vercel
-export default app;
-
 export default app;
