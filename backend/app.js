@@ -4,18 +4,18 @@ import path from "path";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
 import db from "./config/PostgreSQLDatabase.js";
-import routerUsuario from "../backend/routes/usuario_routes.js";
-import routerVehiculo from "../backend/routes/vehiculo_routes.js";
-import routerAccesoSalida from "../backend/routes/acceso_salida_routes.js";
-import routerCelda from "../backend/routes/celda_routes.js";
-import routerHistorialParqueo from "../backend/routes/historial_parqueo_routes.js";
-import routerIncidencia from "../backend/routes/incidencia_routes.js";
-import routerPerfilUsuario from "../backend/routes/perfil_usuario_routes.js";
-import routerPicoPlaca from "../backend/routes/pico_placa_routes.js";
-import routerReporteIncidencia from "../backend/routes/reporte_incidencia_routes.js";
+import routerUsuario from "./routes/usuario_routes.js";
+import routerVehiculo from "./routes/vehiculo_routes.js";
+import routerAccesoSalida from "./routes/acceso_salida_routes.js";
+import routerCelda from "./routes/celda_routes.js";
+import routerHistorialParqueo from "./routes/historial_parqueo_routes.js";
+import routerIncidencia from "./routes/incidencia_routes.js";
+import routerPerfilUsuario from "./routes/perfil_usuario_routes.js";
+import routerPicoPlaca from "./routes/pico_placa_routes.js";
+import routerReporteIncidencia from "./routes/reporte_incidencia_routes.js";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || process.env.VERCEL_PORT || 3000;
 
 // Configuración de Swagger
 const swaggerOptions = {
@@ -161,11 +161,17 @@ app.get("/", (req, res) => {
 async function main() {
   try {
     await db.connect();
-    app.listen(PORT, () => {
-      console.log(`✓ Servidor corriendo en http://localhost:${PORT}`);
-      console.log(`✓ API disponible en http://localhost:${PORT}/api`);
-      console.log(`Presiona Crtl+C para detener el servidor`);
-    });
+    
+    // Vercel maneja el servidor automáticamente
+    if (process.env.VERCEL) {
+      console.log("✓ Servidor listo para Vercel");
+    } else {
+      app.listen(PORT, () => {
+        console.log(`✓ Servidor corriendo en http://localhost:${PORT}`);
+        console.log(`✓ API disponible en http://localhost:${PORT}/api`);
+        console.log(`Presiona Crtl+C para detener el servidor`);
+      });
+    }
   } catch (error) {
     console.error("Error al iniciar el servidor:", error);
     process.exit(1);
@@ -173,5 +179,8 @@ async function main() {
 }
 
 main();
+
+// Exportar para Vercel
+export default app;
 
 export default app;
