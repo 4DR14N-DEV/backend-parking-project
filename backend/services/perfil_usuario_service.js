@@ -14,7 +14,7 @@ class PerfilUsuarioService {
     }
 
     const result = await db.query(
-      "INSERT INTO perfil_usuario (perfil) VALUES ($1) RETURNING id",
+      'INSERT INTO "ParkingLot"."PERFIL_USUARIO" (perfil) VALUES ($1) RETURNING id',
       [perfilUsuario.perfil],
     );
 
@@ -29,7 +29,7 @@ class PerfilUsuarioService {
       await db.connect();
     }
 
-    const rows = await db.query("SELECT id, perfil FROM perfil_usuario");
+    const rows = await db.query('SELECT id, perfil FROM "ParkingLot"."PERFIL_USUARIO"');
 
     const perfilesUsuario = rows.map((row) => {
       const perfilUsuario = new PerfilUsuario({
@@ -49,7 +49,7 @@ class PerfilUsuarioService {
     }
 
     const rows = await db.query(
-      "SELECT id, perfil FROM perfil_usuario WHERE id = $1",
+      'SELECT id, perfil FROM "ParkingLot"."PERFIL_USUARIO" WHERE id = $1',
       [id],
     );
 
@@ -70,7 +70,7 @@ class PerfilUsuarioService {
     if (datosActualizados.perfil !== undefined)
       perfilUsuario.perfil = datosActualizados.perfil;
 
-    await db.query("UPDATE perfil_usuario SET perfil = $1 WHERE id = $2", [
+    await db.query('UPDATE "ParkingLot"."PERFIL_USUARIO" SET perfil = $1 WHERE id = $2', [
       perfilUsuario.perfil,
       perfilUsuario.id,
     ]);
@@ -82,7 +82,7 @@ class PerfilUsuarioService {
     const perfilUsuario = await this.obtenerPerfilUsuarioPorId(id);
     if (!perfilUsuario) return null;
 
-    await db.query("DELETE FROM perfil_usuario WHERE id = $1", [
+    await db.query('DELETE FROM "ParkingLot"."PERFIL_USUARIO" WHERE id = $1', [
       perfilUsuario.id,
     ]);
     return perfilUsuario;

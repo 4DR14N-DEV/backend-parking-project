@@ -43,7 +43,7 @@ class UsuarioService {
 
     //INSERT usando los getters del objeto para respetar la encapsulacion
     const result = await db.query(
-      "INSERT INTO usuario (tipo_documento, numero_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, direccion_correo, numero_celular, foto_perfil, estado, clave, perfil_usuario_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id",
+      'INSERT INTO "USUARIO" (tipo_documento, numero_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, direccion_correo, numero_celular, foto_perfil, estado, clave, perfil_usuario_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id',
       [
         usuario.tipoDocumento,
         usuario.numeroDocumento,
@@ -72,7 +72,7 @@ class UsuarioService {
     }
 
     const rows = await db.query(
-      "SELECT id_usuario, tipo_documento, numero_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, direccion_correo, numero_celular, foto_perfil, estado, clave, perfil_usuario_id FROM usuario",
+      'SELECT id_usuario, tipo_documento, numero_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, direccion_correo, numero_celular, foto_perfil, estado, clave, perfil_usuario_id FROM "USUARIO"',
     );
 
     const usuarios = rows.map((row) => {
@@ -104,7 +104,7 @@ class UsuarioService {
     }
 
     const rows = await db.query(
-      "SELECT id_usuario, tipo_documento, numero_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, direccion_correo, numero_celular, foto_perfil, estado, clave, perfil_usuario_id FROM usuario WHERE id_usuario = $1",
+      'SELECT id_usuario, tipo_documento, numero_documento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, direccion_correo, numero_celular, foto_perfil, estado, clave, perfil_usuario_id FROM "USUARIO" WHERE id_usuario = $1',
       [id],
     );
 
@@ -166,7 +166,7 @@ class UsuarioService {
 
     //Persistir en la base de datos usando los getters del objeto actualizado
     await db.query(
-      "UPDATE usuario SET tipo_documento = $1, numero_documento = $2, primer_nombre = $3, segundo_nombre = $4, primer_apellido = $5, segundo_apellido = $6, direccion_correo = $7, numero_celular = $8, foto_perfil = $9, estado = $10, clave = $11, perfil_usuario_id = $12 WHERE id_usuario = $13",
+      'UPDATE "USUARIO" SET tipo_documento = $1, numero_documento = $2, primer_nombre = $3, segundo_nombre = $4, primer_apellido = $5, segundo_apellido = $6, direccion_correo = $7, numero_celular = $8, foto_perfil = $9, estado = $10, clave = $11, perfil_usuario_id = $12 WHERE id_usuario = $13',
       [
         usuario.tipoDocumento,
         usuario.numeroDocumento,
@@ -194,7 +194,7 @@ class UsuarioService {
       return null;
     }
 
-    await db.query("DELETE FROM usuario WHERE id_usuario = $1", [usuario.id]);
+    await db.query('DELETE FROM "USUARIO" WHERE id_usuario = $1', [usuario.id]);
     return usuario;
   }
 }

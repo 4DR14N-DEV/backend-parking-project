@@ -50,10 +50,18 @@ class PostgreSQLDatabase extends Database {
     // Verificar que la conexión es válida
     try {
       const client = await this.pool.connect();
+      
+      // Listar tablas en public
+      const tablesResult = await client.query(
+        "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"
+      );
+      console.log("🔧 TABLAS EN PUBLIC:", tablesResult.rows.map(r => r.table_name));
+      
       const result = await client.query('SELECT current_database() as db, NOW() as hora');
       this.isConnected = true;
       client.release();
     } catch (error) {
+      console.log("🔧 ERROR EN CONNECT:", error.message);
       this.isConnected = false;
       throw error;
     }
@@ -89,15 +97,6 @@ class PostgreSQLDatabase extends Database {
     }
 
     try {
-      // Ejecutar SET search_path y verificar
-      await this.pool.query("SET search_path TO ParkingLot");
-      
-      // Verificar tablas disponibles en el esquema ParkingLot
-      const tablesResult = await this.pool.query(
-        "SELECT table_name FROM information_schema.tables WHERE table_schema = 'ParkingLot'"
-      );
-      console.log("🔧 Tablas en ParkingLot:", tablesResult.rows.map(r => r.table_name));
-      
       const result = await this.pool.query(sqlString, params);
       return result.rows;
     } catch (error) {
@@ -105,7 +104,6 @@ class PostgreSQLDatabase extends Database {
       if (error.code === '57P01' || error.code === '57P02' || error.code === '57P03') {
         this.isConnected = false;
         await this.connect();
-        await this.pool.query("SET search_path TO ParkingLot");
         const result = await this.pool.query(sqlString, params);
         return result.rows;
       }
