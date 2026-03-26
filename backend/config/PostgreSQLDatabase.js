@@ -100,13 +100,19 @@ class PostgreSQLDatabase extends Database {
 
     try {
       // Ejecutar SET search_path antes de cada query
-      await this.pool.query("SET search_path TO ParkingLot, public");
+      const setResult = await this.pool.query("SET search_path TO ParkingLot, public");
+      console.log("🔧 DEBUG - SET search_path result:", setResult);
+      
+      // Verificar el search_path actual
+      const checkResult = await this.pool.query("SHOW search_path");
+      console.log("🔧 DEBUG - Current search_path:", checkResult.rows[0].search_path);
       
       const result = await this.pool.query(sqlString, params);
       console.log("🔧 DEBUG - ROWS:", result.rows.length);
       return result.rows;
     } catch (error) {
       console.log("🔧 DEBUG - ERROR:", error.message);
+      console.log("🔧 DEBUG - ERROR CODE:", error.code);
       // Si hay error de conexión, intentar reconectar
       if (error.code === '57P01' || error.code === '57P02' || error.code === '57P03') {
         this.isConnected = false;
