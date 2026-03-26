@@ -22,6 +22,8 @@ class PostgreSQLDatabase extends Database {
       throw new Error("DATABASE_URL no está configurada en las variables de entorno");
     }
     
+    console.log("🔧 DEBUG - DATABASE_URL:", connectionString.substring(0, 50) + "...");
+    
     // Extraer configuración de la URL
     const urlObj = new URL(connectionString);
     const host = urlObj.hostname;
@@ -30,9 +32,7 @@ class PostgreSQLDatabase extends Database {
     const user = urlObj.username;
     const password = urlObj.password;
 
-    if (process.env.NODE_ENV !== "production") {
-      console.log(`🔄 Conectando a ${host}:${port}...`);
-    }
+    console.log(`🔄 Conectando a ${host}:${port}/${database}...`);
 
     this.pool = new Pool({
       host: host,
@@ -91,6 +91,9 @@ class PostgreSQLDatabase extends Database {
    * Método helper para ejecutar queries con parámetros estilo MySQL
    */
   async query(sqlString, params = []) {
+    console.log("🔧 DEBUG - SQL:", sqlString);
+    console.log("🔧 DEBUG - PARAMS:", params);
+    
     // Reconectar si es necesario
     if (!this.pool || !this.isConnected) {
       await this.connect();
@@ -98,8 +101,10 @@ class PostgreSQLDatabase extends Database {
 
     try {
       const result = await this.pool.query(sqlString, params);
+      console.log("🔧 DEBUG - ROWS:", result.rows.length);
       return result.rows;
     } catch (error) {
+      console.log("🔧 DEBUG - ERROR:", error.message);
       // Si hay error de conexión, intentar reconectar
       if (error.code === '57P01' || error.code === '57P02' || error.code === '57P03') {
         this.isConnected = false;
