@@ -1,0 +1,40 @@
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Dependencias
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs
+*.log
+
+# Archivos de coverage
+coverage/
+.nyc_output/
+
+# Archivos de test
+test/
+tests/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build outputs
+dist/
+build/
+
+# Archivos temporales
+tmp/
+temp/

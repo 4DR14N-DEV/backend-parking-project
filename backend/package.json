@@ -1,0 +1,37 @@
+{
+  "name": "backend-parking-project",
+  "version": "1.0.0",
+  "description": "API para gestión de sistema de parqueaderos",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node app.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:models": "jest tests/models",
+    "test:services": "jest tests/services"
+  },
+  "keywords": ["parking", "api", "express", "postgresql", "supabase"],
+  "author": "adrianrpo23@gmail.com",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mysql2": "^3.20.0",
+    "nodemon": "^3.1.14",
+    "pg": "^8.20.0",
+    "postgres": "^3.4.8",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0"
+  }
+}
