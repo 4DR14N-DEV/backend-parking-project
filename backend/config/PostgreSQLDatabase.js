@@ -43,7 +43,6 @@ class PostgreSQLDatabase extends Database {
       max: 5,
       idleTimeoutMillis: 10000,
       connectionTimeoutMillis: 5000,
-      options: '-c search_path=ParkingLot,public',
     });
 
     // Manejar errores de conexión
@@ -100,6 +99,9 @@ class PostgreSQLDatabase extends Database {
     }
 
     try {
+      // Ejecutar SET search_path antes de cada query
+      await this.pool.query("SET search_path TO ParkingLot, public");
+      
       const result = await this.pool.query(sqlString, params);
       console.log("🔧 DEBUG - ROWS:", result.rows.length);
       return result.rows;
@@ -109,6 +111,7 @@ class PostgreSQLDatabase extends Database {
       if (error.code === '57P01' || error.code === '57P02' || error.code === '57P03') {
         this.isConnected = false;
         await this.connect();
+        await this.pool.query("SET search_path TO ParkingLot, public");
         const result = await this.pool.query(sqlString, params);
         return result.rows;
       }
