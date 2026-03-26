@@ -1,12 +1,7 @@
-import pg from "pg";
-import { promisify } from "util";
-import dns from "dns";
+import { Pool } from "pg";
 import Database from "./database.js";
 
 // Las variables de entorno vienen de Vercel (process.env.DATABASE_URL)
-// No necesitamos cargar .env manualmente
-
-const resolve4 = promisify(dns.resolve4);
 
 class PostgreSQLDatabase extends Database {
   constructor() {
@@ -35,33 +30,17 @@ class PostgreSQLDatabase extends Database {
     const user = urlObj.username;
     const password = urlObj.password;
 
-    // Resolución DNS manual - priorizar IPv4
-    let finalHost = host;
-    try {
-      const ipv4Addresses = await resolve4(host);
-      if (ipv4Addresses && ipv4Addresses.length > 0) {
-        finalHost = ipv4Addresses[0];
-        if (process.env.NODE_ENV !== "production") {
-          console.log(`✓ Resuelto IPv4 para ${host}: ${ipv4Addresses[0]}`);
-        }
-      }
-    } catch (e) {
-      if (process.env.NODE_ENV !== "production") {
-        console.log(`⚠ Error al resolver DNS: ${e.message}, usando hostname original`);
-      }
-    }
-
     if (process.env.NODE_ENV !== "production") {
-      console.log(`🔄 Conectando a ${finalHost}:${port}...`);
+      console.log(`🔄 Conectando a ${host}:${port}...`);
     }
 
-    this.pool = new pg.Pool({
-      host: finalHost,
+    this.pool = new Pool({
+      host: host,
       port: port,
       database: database,
       user: user,
       password: password,
-      max: 5, // Reducido para Vercel/serverless
+      max: 5,
       idleTimeoutMillis: 10000,
       connectionTimeoutMillis: 5000,
     });
