@@ -43,6 +43,7 @@ class PostgreSQLDatabase extends Database {
       max: 5,
       idleTimeoutMillis: 10000,
       connectionTimeoutMillis: 5000,
+      options: '-c search_path=ParkingLot,public',
     });
 
     // Manejar errores de conexión
