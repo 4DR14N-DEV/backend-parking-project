@@ -2,7 +2,77 @@ import express from "express";
 import CeldaService from "../services/celda_service.js";
 const routerCelda = express.Router();
 
-//Listar todas las celdas
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Celda:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: ID único de la celda
+ *           example: 1
+ *         tipo:
+ *           type: string
+ *           description: Tipo de celda (Carro, Moto)
+ *           enum: [Carro, Moto]
+ *           example: "Carro"
+ *         estado:
+ *           type: string
+ *           description: Estado de la celda (Libre, Ocupada)
+ *           enum: [Libre, Ocupada]
+ *           example: "Libre"
+ *     CeldaInput:
+ *       type: object
+ *       required:
+ *         - tipo
+ *         - estado
+ *       properties:
+ *         tipo:
+ *           type: string
+ *           description: Tipo de celda
+ *           enum: [Carro, Moto]
+ *           example: "Carro"
+ *         estado:
+ *           type: string
+ *           description: Estado de la celda
+ *           enum: [Libre, Ocupada]
+ *           example: "Libre"
+ */
+
+/**
+ * @swagger
+ * /api/celdas:
+ *   get:
+ *     summary: Listar todas las celdas
+ *     description: Retorna una lista de todas las celdas de estacionamiento
+ *     tags: [Celdas]
+ *     responses:
+ *       200:
+ *         description: Lista de celdas obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Celda'
+ *                 message:
+ *                   type: string
+ *                   example: "Celdas obtenidas exitosamente"
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 routerCelda.get("/", async (req, res) => {
   try {
     const celdas = await CeldaService.listarCeldas();
@@ -20,7 +90,42 @@ routerCelda.get("/", async (req, res) => {
   }
 });
 
-//Obtener celda por ID
+/**
+ * @swagger
+ * /api/celdas/{id}:
+ *   get:
+ *     summary: Obtener una celda por ID
+ *     description: Retorna los datos de una celda específica
+ *     tags: [Celdas]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID único de la celda
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Celda obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/Celda'
+ *                 message:
+ *                   type: string
+ *                   example: "Celda obtenida exitosamente"
+ *       404:
+ *         description: Celda no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
 routerCelda.get("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -47,7 +152,27 @@ routerCelda.get("/:id", async (req, res) => {
   }
 });
 
-//Crear nueva celda
+/**
+ * @swagger
+ * /api/celdas:
+ *   post:
+ *     summary: Crear una nueva celda
+ *     description: Registra una nueva celda de estacionamiento
+ *     tags: [Celdas]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CeldaInput'
+ *     responses:
+ *       201:
+ *         description: Celda creada exitosamente
+ *       400:
+ *         description: Error de validación
+ *       500:
+ *         description: Error interno del servidor
+ */
 routerCelda.post("/", async (req, res) => {
   try {
     const { tipo, estado } = req.body;
@@ -74,7 +199,39 @@ routerCelda.post("/", async (req, res) => {
   }
 });
 
-//Actualizar celda
+/**
+ * @swagger
+ * /api/celdas/{id}:
+ *   put:
+ *     summary: Actualizar una celda
+ *     description: Actualiza los datos de una celda existente
+ *     tags: [Celdas]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID único de la celda
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tipo:
+ *                 type: string
+ *               estado:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Celda actualizada exitosamente
+ *       404:
+ *         description: Celda no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
 routerCelda.put("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -106,7 +263,28 @@ routerCelda.put("/:id", async (req, res) => {
   }
 });
 
-//Eliminar celda
+/**
+ * @swagger
+ * /api/celdas/{id}:
+ *   delete:
+ *     summary: Eliminar una celda
+ *     description: Elimina una celda del sistema
+ *     tags: [Celdas]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID único de la celda
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Celda eliminada exitosamente
+ *       404:
+ *         description: Celda no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
 routerCelda.delete("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);

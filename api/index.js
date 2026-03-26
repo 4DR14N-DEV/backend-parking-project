@@ -20,23 +20,90 @@ const PORT = process.env.PORT || process.env.VERCEL_PORT || 3000;
 // Configuración de Swagger
 const swaggerOptions = {
   definition: {
-    openapi: "3.0.0",
+    openapi: "3.0.3",
     info: {
-      title: "API de Parqueadero - Documentación",
+      title: "Parking Lot Management API",
       version: "1.0.0",
-      description: "API para la gestión de un sistema de parqueaderos.",
+      description: `
+## 📋 Descripción
+API REST para la gestión integral de un sistema de parqueadero. Proporciona endpoints para la administración de usuarios, vehículos, celdas de estacionamiento, control de accesos y salidas, gestión de incidencias y reportes.
+
+## 🎯 Características Principales
+- **Gestión de Usuarios**: CRUD completo con diferentes perfiles (administrador, operador, usuario)
+- **Control de Vehículos**: Registro y gestión de vehículos asociados a usuarios
+- **Administración de Celdas**: Control de disponibilidad de espacios de estacionamiento
+- **Historial de Parqueo**: Seguimiento completo de ingresos y salidas de vehículos
+- **Pico y Placa**: Sistema de restricciones vehiculares por día y número
+- **Gestión de Incidencias**: Registro y seguimiento de incidentes en el parqueadero
+
+## 🔐 Autenticación
+Actualmente la API utiliza autenticación básica. Se recomienda implementar JWT en futuras versiones.
+
+## 📝 Convenciones
+- Los nombres de tablas en PostgreSQL deben estar en MAYÚSCULAS
+- Las respuestas siguen un formato estándar con estructura: \`{ success, data, message }\`
+- Los códigos de estado HTTP: 200 (OK), 201 (Creado), 400 (Error de validación), 404 (No encontrado), 500 (Error interno)
+      `,
+      contact: {
+        name: "API Support",
+        email: "adrianrpo23@gmail.com",
+        url: "https://github.com/4DR14N-DEV/backend-parking-project"
+      },
+      license: {
+        name: "MIT",
+        url: "https://opensource.org/licenses/MIT"
+      },
     },
     servers: [
       {
         url: `http://localhost:${PORT}`,
+        description: "Servidor de desarrollo local"
       },
+      {
+        url: "https://backend-parking-project-v10.vercel.app",
+        description: "Servidor de producción (Vercel)"
+      }
     ],
+    components: {
+      schemas: {
+        Error: {
+          type: "object",
+          properties: {
+            success: { type: "boolean", example: false },
+            message: { type: "string", example: "Error al obtener usuarios" },
+            error: { type: "string", example: "relation \"USUARIO\" does not exist" }
+          }
+        },
+        SuccessResponse: {
+          type: "object",
+          properties: {
+            success: { type: "boolean", example: true },
+            data: { type: "object" },
+            message: { type: "string", example: "Operación exitosa" }
+          }
+        }
+      }
+    },
+    tags: [
+      { name: "Usuarios", description: "Gestión de usuarios del sistema" },
+      { name: "Vehículos", description: "Administración de vehículos" },
+      { name: "Celdas", description: "Control de espacios de estacionamiento" },
+      { name: "Accesos y Salidas", description: "Registro de ingresos y salidas" },
+      { name: "Historial de Parqueo", description: "Seguimiento de estacionamiento" },
+      { name: "Incidencias", description: "Gestión de incidentes" },
+      { name: "Perfiles de Usuario", description: "Roles y permisos" },
+      { name: "Pico y Placa", description: "Restricciones vehiculares" },
+      { name: "Reportes de Incidencias", description: "Reportes de incidentes" }
+    ]
   },
   apis: [path.resolve(process.cwd(), "../backend/routes/*.js")], 
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+// Rutas alternativas para documentación Swagger
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -95,6 +162,12 @@ app.get("/", (req, res) => {
   res.json({
     success: true,
     message: "API de PARQUEADERO - Backend funcionando exitosamente",
+    documentation: {
+      swagger_ui: "http://localhost:" + PORT + "/api-docs",
+      swagger_ui_alt: "http://localhost:" + PORT + "/api/docs",
+      production_swagger: "https://backend-parking-project-v10.vercel.app/api-docs",
+      production_swagger_alt: "https://backend-parking-project-v10.vercel.app/api/docs"
+    },
     endpoints: {
       //usuarios
       "GET /api/usuarios": "Listar todos los usuarios",

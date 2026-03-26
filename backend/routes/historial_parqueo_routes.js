@@ -2,7 +2,39 @@ import express from "express";
 import HistorialParqueoService from "../services/historial_parqueo_service.js";
 const routerHistorialParqueo = express.Router();
 
-//Listar todo el historial de parqueo
+/**
+ * @swagger
+ * /api/historial-parqueo:
+ *   get:
+ *     summary: Listar todo el historial de parqueo
+ *     description: Obtiene todos los registros del historial de parqueo en el sistema
+ *     tags:
+ *       - Historial Parqueo
+ *     responses:
+ *       200:
+ *         description: Historial de parqueos obtenidos exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *             example:
+ *               success: true
+ *               data:
+ *                 - CELDA: 1
+ *                   VEHICULO: 1
+ *                   FECHAHORA: "2024-01-15T10:30:00Z"
+ *               message: "Historial de parqueos obtenidos exitosamente"
+ *       500:
+ *         description: Error del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *             example:
+ *               success: false
+ *               message: "Error al obtener historial de parqueos"
+ *               error: "Error details"
+ */
 routerHistorialParqueo.get("/", async (req, res) => {
   try {
     const historialParqueos = await HistorialParqueoService.listarHistorial();
@@ -21,6 +53,63 @@ routerHistorialParqueo.get("/", async (req, res) => {
 });
 
 //Obtener historial de parqueo por ID
+/**
+ * @swagger
+ * /api/historial-parqueo/celda/{celdaId}/vehiculo/{vehiculoId}:
+ *   get:
+ *     summary: Obtener historial de parqueo por ID
+ *     description: Obtiene un registro específico del historial de parqueo mediante los IDs de celda y vehículo
+ *     tags:
+ *       - Historial Parqueo
+ *     parameters:
+ *       - in: path
+ *         name: celdaId
+ *         required: true
+ *         description: ID de la celda de parqueo
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *       - in: path
+ *         name: vehiculoId
+ *         required: true
+ *         description: ID del vehículo
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Historial de parqueo obtenido exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *             example:
+ *               success: true
+ *               data:
+ *                 CELDA: 1
+ *                 VEHICULO: 1
+ *                 FECHAHORA: "2024-01-15T10:30:00Z"
+ *               message: "Historial de parqueo obtenido exitosamente"
+ *       404:
+ *         description: Historial de parqueo no encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *             example:
+ *               success: false
+ *               message: "Historial de parqueo no encontrado"
+ *       500:
+ *         description: Error del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *             example:
+ *               success: false
+ *               message: "Error al obtener historial de parqueo"
+ *               error: "Error details"
+ */
 routerHistorialParqueo.get(
   "/celda/:celdaId/vehiculo/:vehiculoId",
   async (req, res) => {
@@ -55,6 +144,72 @@ routerHistorialParqueo.get(
 );
 
 //Crear nuevo historial de parqueo
+/**
+ * @swagger
+ * /api/historial-parqueo:
+ *   post:
+ *     summary: Crear nuevo historial de parqueo
+ *     description: Registra un nuevo historial de parqueo en el sistema
+ *     tags:
+ *       - Historial Parqueo
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - celda
+ *               - vehiculo
+ *               - fechaHora
+ *             properties:
+ *               celda:
+ *                 type: integer
+ *                 description: ID de la celda de parqueo
+ *                 example: 1
+ *               vehiculo:
+ *                 type: integer
+ *                 description: ID del vehículo
+ *                 example: 1
+ *               fechaHora:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Fecha y hora del parqueo
+ *                 example: "2024-01-15T10:30:00Z"
+ *     responses:
+ *       201:
+ *         description: Historial de parqueo creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *             example:
+ *               success: true
+ *               data:
+ *                 CELDA: 1
+ *                 VEHICULO: 1
+ *                 FECHAHORA: "2024-01-15T10:30:00Z"
+ *               message: "Historial de parqueo creado exitosamente"
+ *       400:
+ *         description: Datos faltantes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *             example:
+ *               success: false
+ *               message: "Faltan campos obligatorios: celda, vehiculo, fechaHora"
+ *       500:
+ *         description: Error del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *             example:
+ *               success: false
+ *               message: "Error al crear historial de parqueo"
+ *               error: "Error details"
+ */
 routerHistorialParqueo.post("/", async (req, res) => {
   try {
     const { celda, vehiculo, fechaHora } = req.body;
@@ -88,6 +243,59 @@ routerHistorialParqueo.post("/", async (req, res) => {
 });
 
 //Eliminar historial de parqueo
+/**
+ * @swagger
+ * /api/historial-parqueo/celda/{celdaId}/vehiculo/{vehiculoId}:
+ *   delete:
+ *     summary: Eliminar historial de parqueo
+ *     description: Elimina un registro del historial de parqueo mediante los IDs de celda y vehículo
+ *     tags:
+ *       - Historial Parqueo
+ *     parameters:
+ *       - in: path
+ *         name: celdaId
+ *         required: true
+ *         description: ID de la celda de parqueo
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *       - in: path
+ *         name: vehiculoId
+ *         required: true
+ *         description: ID del vehículo
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Historial de parqueo eliminado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *             example:
+ *               success: true
+ *               message: "Historial de parqueo eliminado exitosamente"
+ *       404:
+ *         description: Historial de parqueo no encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *             example:
+ *               success: false
+ *               message: "Historial de parqueo no encontrado"
+ *       500:
+ *         description: Error del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *             example:
+ *               success: false
+ *               message: "Error al eliminar historial de parqueo"
+ *               error: "Error details"
+ */
 routerHistorialParqueo.delete(
   "/celda/:celdaId/vehiculo/vehiculoId",
   async (req, res) => {

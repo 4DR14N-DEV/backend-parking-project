@@ -2,7 +2,61 @@ import express from "express";
 import PicoPlacaService from "../services/pico_placa_service.js";
 const routerPicoPlaca = express.Router();
 
-//Listar todos los pico y placa
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     PicoPlaca:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: ID único
+ *           example: 1
+ *         tipoVehiculo:
+ *           type: string
+ *           description: Tipo de vehículo (Carro, Moto)
+ *           enum: [Carro, Moto]
+ *           example: "Carro"
+ *         numero:
+ *           type: string
+ *           description: Último dígito del vehículo
+ *           example: "1"
+ *         dia:
+ *           type: string
+ *           description: Día de restricción (Lunes, Martes, etc.)
+ *           enum: [Lunes, Martes, Miercoles, Jueves, Viernes]
+ *           example: "Lunes"
+ *     PicoPlacaInput:
+ *       type: object
+ *       required:
+ *         - tipoVehiculo
+ *         - numero
+ *         - dia
+ *       properties:
+ *         tipoVehiculo:
+ *           type: string
+ *           enum: [Carro, Moto]
+ *         numero:
+ *           type: string
+ *         dia:
+ *           type: string
+ *           enum: [Lunes, Martes, Miercoles, Jueves, Viernes]
+ */
+
+/**
+ * @swagger
+ * /api/pico-y-placa:
+ *   get:
+ *     summary: Listar todas las restricciones pico y placa
+ *     description: Retorna todas las restricciones de pico y placa del sistema
+ *     tags: [Pico y Placa]
+ *     responses:
+ *       200:
+ *         description: Lista obtenida exitosamente
+ *       500:
+ *         description: Error interno del servidor
+ */
 routerPicoPlaca.get("/", async (req, res) => {
   try {
     const picoPlacas = await PicoPlacaService.listarPicoPlaca();
@@ -20,7 +74,26 @@ routerPicoPlaca.get("/", async (req, res) => {
   }
 });
 
-//Obtener pico y placa por ID
+/**
+ * @swagger
+ * /api/pico-y-placa/{id}:
+ *   get:
+ *     summary: Obtener una restricción pico y placa por ID
+ *     tags: [Pico y Placa]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Restricción obtenida exitosamente
+ *       404:
+ *         description: No encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
 routerPicoPlaca.get("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -46,7 +119,26 @@ routerPicoPlaca.get("/:id", async (req, res) => {
   }
 });
 
-//Crear nuevo pico y placa
+/**
+ * @swagger
+ * /api/pico-y-placa:
+ *   post:
+ *     summary: Crear nueva restricción pico y placa
+ *     tags: [Pico y Placa]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PicoPlacaInput'
+ *     responses:
+ *       201:
+ *         description: Creado exitosamente
+ *       400:
+ *         description: Error de validación
+ *       500:
+ *         description: Error interno del servidor
+ */
 routerPicoPlaca.post("/", async (req, res) => {
   try {
     const { tipoVehiculo, numero, dia } = req.body;
@@ -78,7 +170,39 @@ routerPicoPlaca.post("/", async (req, res) => {
   }
 });
 
-//Actualizar pico y placa
+/**
+ * @swagger
+ * /api/pico-y-placa/{id}:
+ *   put:
+ *     summary: Actualizar restricción pico y placa
+ *     tags: [Pico y Placa]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tipoVehiculo:
+ *                 type: string
+ *               numero:
+ *                 type: string
+ *               dia:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Actualizado exitosamente
+ *       404:
+ *         description: No encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
 routerPicoPlaca.put("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -110,7 +234,26 @@ routerPicoPlaca.put("/:id", async (req, res) => {
   }
 });
 
-//Eliminar Pico y placa
+/**
+ * @swagger
+ * /api/pico-y-placa/{id}:
+ *   delete:
+ *     summary: Eliminar restricción pico y placa
+ *     tags: [Pico y Placa]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Eliminado exitosamente
+ *       404:
+ *         description: No encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
 routerPicoPlaca.delete("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
