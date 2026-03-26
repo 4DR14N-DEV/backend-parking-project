@@ -273,8 +273,15 @@ MIT License - Consulta el archivo [LICENSE](LICENSE) para más detalles.
 
 ## Autor
 
-- **Adrian Restrepo** - [adrianrpo23@gmail.com](mailto:adrianrpo23@gmail.com)
-- **GitHub:** [4DR14N-DEV](https://github.com/4DR14N-DEV)
+- **Adrian Restrepo**
+[adrianrpo23@gmail.com](mailto:adrianrpo23@gmail.com)
+[4DR14N-DEV](https://github.com/4DR14N-DEV)
+
+- **Oscar David Gamboa**
+[https://github.com/Oskardmt009]
+
+- **Johan Forero**
+[https://github.com/Johanfor]
 
 ## Soporte
 
